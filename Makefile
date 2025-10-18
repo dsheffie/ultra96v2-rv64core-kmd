@@ -1,4 +1,4 @@
-obj-m += kmmap.o
+obj-m += ultra96v2_riscv.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
