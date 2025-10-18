@@ -6,6 +6,7 @@
 #include <linux/fs.h>
 #include <linux/dma-mapping.h>      // dma_alloc_*, dma_free
 #include <linux/miscdevice.h>
+#include <linux/uaccess.h>
 
 static struct device* dma_dev = NULL;
 static dma_addr_t dma_handle;
@@ -21,7 +22,9 @@ static int cma_malloc_mmap(struct file* fptr, struct vm_area_struct* vma){
 };
 
 static long cma_ioctl(struct file *filp, unsigned int cmd, unsigned long arg) {
-  printk(KERN_INFO "someone attempting to do an ioctl\n");
+  if(__copy_to_user( (dma_addr_t*)arg, &dma_handle, sizeof(dma_handle) )) {
+    return -EFAULT;
+  }
   return 0;
 }
 
